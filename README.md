@@ -1,28 +1,33 @@
 # camelca.se
-## The humans responsible & technology colophon
 
-# TEAM
+## TEAM
 
     Owner/Developer
     Shen Chong
     fat404@gmail.com
     @fat404
 
-# TECHNOLOGY COLOPHON
+## TECHNOLOGY COLOPHON
 
     HTML5, CSS3
     jQuery, Modernizr
-    Markdown
-    Silex, Twig, Doctrine
+    Markdown, Markdown Extra
+    Silex, Twig, Doctrine, MySQL
 
-# THEME
+## THEME
   
     Name: Textgasm
-    Version: v0.7
+    Version: v0.8
     Tags: Reponsive, minimalism, lightweight, whitespace, native HTML, fast.
     Fonts: Droid Serif, Open Sans, Consolas
 
-# CHANGELOG
+## CHANGELOG
+
+    v0.8 - 2013-07-02
+    * added post-nav feature on homepage, post page and search result page
+    * added search function
+    * added boilerplate's 404 page
+    * added some basic error handling
 
     v0.7 - 2013-07-01
     * created github repo
@@ -72,17 +77,15 @@
     * added Droid Sans (Google web font)
     * changed navigation font to use Droid Sans, no more sans-serif in the site now
 
-# TODO
+## TODO
   
     * Nexus 4 / landing-page-esque about page
     * portfolio
-    * post-nav
     * cms screen
     * login
-    * search function
-    * 404 and error handling
+    * mobile testing
 
-# DOCUMENTATION
+## DOCUMENTATION
 
     Open Sans: 16px
     Droid Serif:
@@ -96,7 +99,7 @@
 
     Image: 640px (width)
 
-# Font Awesome
+## Font Awesome
 
     Copyright (C) 2012 by Dave Gandy
 
