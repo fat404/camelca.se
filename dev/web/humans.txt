@@ -12,17 +12,23 @@
 
     HTML5, CSS3
     jQuery, Modernizr
-    Markdown
-    Silex, Twig, Doctrine
+    Markdown, Markdown Extra
+    Silex, Twig, Doctrine, MySQL
 
 # THEME
   
     Name: Textgasm
-    Version: v0.7
+    Version: v0.8
     Tags: Reponsive, minimalism, lightweight, whitespace, native HTML, fast.
     Fonts: Droid Serif, Open Sans, Consolas
 
 # CHANGELOG
+
+    v0.8 - 2013-07-02
+    * added post-nav feature on homepage, post page and search result page
+    * added search function
+    * added boilerplate's 404 page
+    * added some basic error handling
 
     v0.7 - 2013-07-01
     * created github repo
@@ -76,11 +82,9 @@
   
     * Nexus 4 / landing-page-esque about page
     * portfolio
-    * post-nav
     * cms screen
     * login
-    * search function
-    * 404 and error handling
+    * mobile testing
 
 # DOCUMENTATION
 
