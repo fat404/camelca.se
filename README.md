@@ -13,11 +13,12 @@
     HTML5, CSS3
     jQuery, Modernizr
     Markdown
+    Silex, Twig, Doctrine
 
 # THEME
   
     Name: Textgasm
-    Version: v0.2
+    Version: v0.7
     Tags: Reponsive, minimalism, lightweight, whitespace, native HTML, fast.
     Fonts: Droid Serif, Open Sans, Consolas
 
@@ -79,6 +80,7 @@
     * cms screen
     * login
     * search function
+    * 404 and error handling
 
 # DOCUMENTATION
 
