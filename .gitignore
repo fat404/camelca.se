@@ -1,3 +1,6 @@
-# Symfony directories
+dev/composer.lock
+dev/composer.phar
 dev/vendor/*
-dev/composer.*
+dev/web/google*.html
+
+s/google*.html
