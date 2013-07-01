@@ -1,0 +1,3 @@
+# Symfony directories
+dev/vendor/*
+dev/composer.*
