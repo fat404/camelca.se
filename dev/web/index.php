@@ -44,6 +44,31 @@ function getPost($app, $slug) {
   return $post;
 }
 
+function getPostNav($app, $publish_date, $current_id) {
+  $prev_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id < ?) or (publish_date < timestamp(?) and id > ?))and type = 'post' order by publish_date desc, id desc limit 1";
+  $prev_post = $app['db']->fetchAssoc($prev_sql, array($publish_date, $current_id, $publish_date, $current_id));
+
+  if ($current_id == $prev_post['id']) {
+    $prev_post['slug'] = 0;
+  }
+
+  $next_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id > ?) or (publish_date > timestamp(?) and id < ?))and type = 'post' order by publish_date, id limit 1";
+  $next_post = $app['db']->fetchAssoc($next_sql, array($publish_date, $current_id, $publish_date, $current_id));
+
+  if ($current_id == $next_post['id']) {
+    $next_post['slug'] = 0;
+  }
+
+  $post_nav = array(
+    'prev' => $prev_post['slug'],
+    'prev_title' => $prev_post['title'],
+    'next' => $next_post['slug'],
+    'next_title' => $next_post['title']
+  );
+
+  return $post_nav;
+}
+
 function getPosts($app, $current = 0, $total = 0) {
   global $posts_per_page;
   $sql = '';
@@ -72,7 +97,7 @@ function getPostsNav($app, $current = 0) {
   $sql = "select count(*) from posts where status = 'published' and type = 'post'";
   $total = $app['db']->fetchColumn($sql);
 
-  $total = ceil($total / $posts_per_page);
+  $total = (int) ceil($total / $posts_per_page);
 
   if ($current == 0 || $current > $total) {
     $current = $total;
@@ -167,6 +192,11 @@ $app->get('/post/{post_slug}', function($post_slug) use ($app) {
   global $data;
 
   $data['page'] = getPost($app, $post_slug);
+  $data['post_nav'] = getPostNav($app, $data['page']['publish_date'], $data['page']['id']);
+
+  if ($data['post_nav']['prev'] || $data['post_nav']['next']) {
+    $data['page']['post_nav'] = 1;
+  }
 
   return $app['twig']->render('post.html', $data);
 });
