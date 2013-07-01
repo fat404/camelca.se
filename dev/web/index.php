@@ -4,6 +4,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 $app = new Silex\Application();
 
 // Service Providers
+use \Michelf\MarkdownExtra;
+
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
   'db.options' => array(
     'driver' => 'pdo_mysql',
@@ -26,6 +28,7 @@ function getMainMenu ($app) {
 function getPage($app, $slug) {
   $sql = "select * from posts where status = 'published' and type = 'page' and slug = ?";
   $page = $app['db']->fetchAssoc($sql, array($slug));
+  $page['content'] = markToHtml($page['content']);
 
   return $page;
 }
@@ -33,6 +36,7 @@ function getPage($app, $slug) {
 function getPost($app, $slug) {
   $sql = "select * from posts where status = 'published' and type = 'post' and slug = ?";
   $post = $app['db']->fetchAssoc($sql, array($slug));
+  $post['content'] = markToHtml($post['content']);
 
   return $post;
 }
@@ -42,6 +46,12 @@ function getPosts($app) {
   $pages = $app['db']->fetchAll($sql);
 
   return $pages;
+}
+
+function markToHtml($markdown) {
+  $html = MarkdownExtra::defaultTransform($markdown);
+
+  return $html;
 }
 
 $data = array(
