@@ -1,5 +1,5 @@
-# humanstxt.org/
-# The humans responsible & technology colophon
+# camelca.se
+## The humans responsible & technology colophon
 
 # TEAM
 
@@ -22,6 +22,13 @@
     Fonts: Droid Serif, Open Sans, Consolas
 
 # CHANGELOG
+
+    v0.7 - 2013-07-01
+    * created github repo
+    * added Silex backend
+    * added proper routing
+    * imported s/*.html files into template
+    * added Doctrine DBAL, created table and imported content into MySQL
 
     v0.6 - 2013-05-31
     * registered for CloudFare and setup CDN
@@ -68,7 +75,10 @@
   
     * Nexus 4 / landing-page-esque about page
     * portfolio
-    * add backend support
+    * post-nav
+    * cms screen
+    * login
+    * search function
 
 # DOCUMENTATION
 
