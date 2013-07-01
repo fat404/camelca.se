@@ -3,6 +3,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
+// Configuration
+$posts_per_page = 10;
+
 // Service Providers
 use \Michelf\MarkdownExtra;
 
@@ -41,11 +44,64 @@ function getPost($app, $slug) {
   return $post;
 }
 
-function getPosts($app) {
-  $sql = "select * from posts where status = 'published' and type = 'post' order by publish_date desc";
+function getPosts($app, $current = 0, $total = 0) {
+  global $posts_per_page;
+  $sql = '';
+  $offset = 0;
+
+  if ($current < 0) {
+    $current = 1;
+  }
+
+  if ($current > 0 && $current < $total) {
+    $offset = ($total - $current) * $posts_per_page;
+  }
+
+  $sql = "select * from posts where status = 'published' and type = 'post' order by publish_date desc, id desc limit $offset, $posts_per_page";
+
   $pages = $app['db']->fetchAll($sql);
 
   return $pages;
+}
+
+function getPostsNav($app, $current = 0) {
+  global $posts_per_page;
+  $prev = 0;
+  $next = 0;
+
+  $sql = "select count(*) from posts where status = 'published' and type = 'post'";
+  $total = $app['db']->fetchColumn($sql);
+
+  $total = ceil($total / $posts_per_page);
+
+  if ($current == 0 || $current > $total) {
+    $current = $total;
+  }
+
+  if ($current < 0) {
+    $current = 1;
+  }
+
+  if ($current > 1) {
+    $prev = $current - 1;
+  }
+
+  if ($current + 1 <= $total) {
+    $next = $current + 1;
+  }
+
+  if (!$prev && !$next) {
+    $total = 0;
+  }
+
+  $posts_nav = array(
+    'total' => $total,
+    'current' => $current,
+    'prev' => $prev,
+    'next' => $next
+  );
+
+  return $posts_nav;
 }
 
 function markToHtml($markdown) {
@@ -65,10 +121,34 @@ $app->get('/', function() use ($app) {
   $data['page'] = array(
     'title' => '',
     'slug' => 'home',
-    'type' => 'page'
+    'type' => 'page',
+    'post_nav' => 0
   );
 
   $data['posts'] = getPosts($app);
+  $data['post_nav'] = getPostsNav($app);
+  if ($data['post_nav']['total']) {
+    $data['page']['post_nav'] = 1;
+  }
+
+  return $app['twig']->render('index.html', $data);
+});
+
+// archive pagination
+$app->get('/archive/{page_num}', function($page_num) use ($app) {
+  global $data;
+
+  $data['page'] = array(
+    'title' => '',
+    'slug' => 'home',
+    'type' => 'page',
+    'post_nav' => 0
+  );
+
+  $data['post_nav'] = getPostsNav($app, $page_num);
+  $data['page']['post_nav'] = $data['post_nav']['total'];
+  
+  $data['posts'] = getPosts($app, $page_num, $data['post_nav']['total']);
 
   return $app['twig']->render('index.html', $data);
 });

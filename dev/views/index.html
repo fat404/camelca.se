@@ -5,22 +5,30 @@
                 <ul>
                 {% for post in posts %}
                     <li>
-                        <h3><a href="/post/{{ post.slug }}">{{ post.title }}</a></h3>
+                        <h3><a href="/post/{{ post.slug }}">{{ post.id }}{{ post.title }}</a></h3>
                         <span class="post-meta">{{ post.publish_date | date('F d, Y') }}</span>
                     </li>
                 {% endfor %}
                 </ul>
             </nav>
+            {% if page.post_nav %}
             <nav class="post-nav clearfix">
                 <div class="prev">
-                    <a href="#"><small>&laquo; Older (2/13)</small></a>
+                {% if post_nav.prev %}
+                    <a href="/archive/{{ post_nav.prev }}"><small>&laquo; Older ({{ post_nav.prev }}/{{ post_nav.total }})</small></a>
+                {% else %}
+                    &nbsp;
+                {% endif %}
                 </div>
                 <div class="current-page">
-                    <small>(3/13)</small>
+                    <small>({{ post_nav.current }}/{{ post_nav.total }})</small>
                 </div>
                 <div class="next">
-                    <a href="#"><small>(4/13) Newer &raquo;</small></a>
+                {% if post_nav.next %}
+                    <a href="{% if post_nav.next == post_nav.total %}/{% else %}/archive/{{ post_nav.next }}{% endif %}"><small>({{ post_nav.next }}/{{ post_nav.total }}) Newer &raquo;</small></a>
+                {% endif %}
                 </div>
             </nav>
+            {% endif %}
 
 {% endblock %}
