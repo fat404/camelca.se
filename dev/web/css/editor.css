@@ -1,0 +1,195 @@
+form {
+  width: 42%;
+  margin: 0;
+  padding: 1% 2%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+input,
+textarea {
+  width: 96%;
+  padding: 2%;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
+textarea {
+  height: 500px;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"] {
+  width: auto;
+}
+
+label + label {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.menu > * {
+  width: auto;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.buttons {
+  text-align: center;
+}
+
+.buttons input {
+  margin-right: 10px;
+  padding: 5px 10px;
+}
+
+.buttons input:hover {
+  background: #fff;
+}
+
+.preview {
+  width: 50%;
+  height: 92%;
+  margin: 0;
+  padding: 2%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: auto;
+  display: inline-block;
+  vertical-align: top;
+  background: #eee;
+}
+
+.wrap {
+  width: 640px;
+  margin: 0 auto;
+}
+
+.preview header {
+    margin-bottom: 10px;
+}
+
+.preview h1 {
+    text-align: center;
+}
+
+.preview .post-meta {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+}
+
+.preview iframe {
+    margin-bottom: 20px;
+}
+
+.preview h1,
+.preview h2, 
+.preview h3, 
+.preview h4, 
+.preview h5, 
+.preview h6 {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+}
+
+.preview h1 {
+    font-size: 28px;
+}
+
+.preview h2 {
+    font-size: 24px;
+}
+
+.preview h3 {
+    font-size: 18px;
+}
+
+.preview h4 {
+    font-size: 16px;
+}
+
+.preview h5 {
+    font-size: 13px;
+}
+
+.preview h6 {
+    font-size: 12px;
+}
+
+.preview p {
+    margin: 0 0 20px 0;
+}
+
+.preview a,
+.preview a:visited,
+.preview a:active {
+    color: #1982D1;
+    text-decoration: none;
+}
+
+.preview a:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+.preview img {
+    /*max-width: 640px;*/
+    min-width: 640px;
+    max-width: 100%;
+    margin: 5px 0 0 0;
+    display: block;
+}
+
+.preview ul ul {
+    margin: 5px 0;
+    padding: 0 0 0 20px;
+}
+
+.preview nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+.preview figure {
+    margin: 0 0 20px 0;
+}
+
+.preview figcaption {
+    padding: 5px 0;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+    text-align: center;
+}
+
+.preview blockquote {
+    margin: 0 0 20px 0;
+    padding: 1em 40px;
+    background: #ddd;
+}
+
+.preview blockquote p {
+    margin: 20px 0 0 0;
+}
+
+    .preview blockquote p:first-child {
+        margin: 0;
+    }
+
+.preview pre {
+    margin: 0 0 20px 0;
+    padding: 1em 40px;
+    background: #ddd;
+}
+
+.preview pre code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+}

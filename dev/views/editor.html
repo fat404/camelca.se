@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>camelCase</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/css/normalize.min.css">
+        <link rel="stylesheet" href="/css/editor.css">
+
+        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+      <form action="/editor" method="POST">
+        <p><input type="text" name="title" placeholder="Title" value="{{ request.get('title') }}"></p>
+        <p><input type="text" name="slug" placeholder="Slug" value="{{ request.get('slug') }}"></p>
+        <textarea name="content">{{ request.get('content') }}</textarea>
+        <p>
+          <label><input type="radio" name="type" value="post" checked="checked"> Post</label>
+          <label><input type="radio" name="type" value="page"> Page</label>
+        </p>
+        <p class="menu">
+          <label><input type="checkbox" name="main_menu"> Show on navigation menu</label>
+          <input type="text" name="seq" placeholder="Sequence">
+        </p>
+        <p class="buttons">
+          <input type="submit" name="action" value="Preview">
+          <input type="submit" name="action" value="Save">
+          <input type="submit" name="action" value="Publish">
+        </p>
+      </form>
+      <div class="preview">
+        <div class="wrap">
+          <header class="clearfix">
+              <h1>{{ request.get('title') }}</h1>
+              <div class="post-meta">{{ "now" | date('F d, Y') }}</div>
+          </header>
+          {{ preview | raw}}
+        </div>
+      </div>
+    </body>
+</html>

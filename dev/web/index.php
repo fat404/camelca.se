@@ -156,6 +156,22 @@ $data = array(
   'main_menu' => getMainMenu($app)
 );
 
+// editor
+$app->get('/editor', function() use ($app) {
+  return $app['twig']->render('editor.html');
+});
+
+$app->post('/editor', function(Request $request) use ($app) {
+  $content = $request->get('content');
+
+  $data = array(
+    'request' => $request,
+    'preview' => markToHtml($content)
+  );
+
+  return $app['twig']->render('editor.html', $data);
+});
+
 // homepage
 $app->get('/', function() use ($app) {
   global $data;
@@ -283,14 +299,17 @@ $app->get('/post/{post_slug}', function($post_slug) use ($app) {
   return $app['twig']->render('post.html', $data);
 });
 
+
+$app['debug'] = true;
+
+// 404 page
 $app->error(function (\Exception $e, $code) use ($app) {
   if ($code == 404) {
     return new Response($app['twig']->render('404.html', array(), 404));
   }
 
-  return new Response('We are sorry, but something went terribly wrong.', $code);
+  // return new Response('We are sorry, but something went terribly wrong.', $code);
 });
 
-$app['debug'] = true;
 
 $app->run();
