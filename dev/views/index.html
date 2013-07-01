@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block main %}
+
+            <nav class="posts">
+                <ul>
+                {% for post in posts %}
+                    <li>
+                        <h3><a href="/post/{{ post.slug }}">{{ post.title }}</a></h3>
+                        <span class="post-meta">{{ post.publish_date | date('F d, Y') }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            </nav>
+            <nav class="post-nav clearfix">
+                <div class="prev">
+                    <a href="#"><small>&laquo; Older (2/13)</small></a>
+                </div>
+                <div class="current-page">
+                    <small>(3/13)</small>
+                </div>
+                <div class="next">
+                    <a href="#"><small>(4/13) Newer &raquo;</small></a>
+                </div>
+            </nav>
+
+{% endblock %}
