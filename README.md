@@ -1,6 +1,4 @@
-camelca.ses
-
-# humanstxt.org/
+# camelca.se
 # The humans responsible & technology colophon
 
 # TEAM
