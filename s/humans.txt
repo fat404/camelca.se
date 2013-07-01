@@ -1,0 +1,93 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Owner/Developer
+    Shen Chong
+    fat404@gmail.com
+    @fat404
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    jQuery, Modernizr
+    Markdown
+
+# THEME
+  
+    Name: Textgasm
+    Version: v0.2
+    Tags: Reponsive, minimalism, lightweight, whitespace, native HTML, fast.
+    Fonts: Droid Serif, Open Sans, Consolas
+
+# CHANGELOG
+
+    v0.6 - 2013-05-31
+    * registered for CloudFare and setup CDN
+    * PageSpeed optimization (99/100)
+        - minified main.css
+        - removed ga code
+        - removed jQuery call
+        - removed main.js and plugins.js calls
+        - added .htaccess
+        - changed Google font loading from using import to inline tag
+        - moved Google font loading as first element in <head>
+    * made navigation link to be black if currently showing that page
+
+    v0.5 - 2013-05-30
+    * contact page bullet list icon
+    * used fontello.com for contact.html icons
+    * added posts navigation (Older/Newer) links in index.html
+
+    v0.4 - 2013-05-20
+    * made header nav and footer nav margin-left consistent (10px)
+    * made post-nav in article footer bold (font-weight: 600)
+    * fixed 'pre code' not using Consolas
+
+    v0.3 - 2013-04-20
+    * added resume.html
+    * added .button styling
+
+    v0.2 - 2013-04-07
+    * made spacing consistent
+    * made width capped at 640 for major part of the #main in the site except for about.html (which will be landing page alike)
+    * dropped full width 960px heading and footer, it is the same design as landscape mobile now
+    * added content2.html of text placeholder content only
+    * cleared out all font-size 14px and made them 13px and consistent with Google except for mono fonts
+
+    v0.1 - 2013-03-25
+    * added about.html and contact.html
+    * styled about.html and contact.html for mobile and desktop
+    * added posts index page (the homepage)
+    * fixed various spacing issue and changed the link color to a more peaceful blue
+    * added Droid Sans (Google web font)
+    * changed navigation font to use Droid Sans, no more sans-serif in the site now
+
+# TODO
+  
+    * Nexus 4 / landing-page-esque about page
+    * portfolio
+    * add backend support
+
+# DOCUMENTATION
+
+    Open Sans: 16px
+    Droid Serif:
+        h1 - 28px
+        h2 - 24px
+        h3 - 18px
+        h4 - 16px
+        h5 - 13px
+        h6 - 12px
+    Consolas: 14px
+
+    Image: 640px (width)
+
+# Font Awesome
+
+    Copyright (C) 2012 by Dave Gandy
+
+    Author:    Dave Gandy
+    License:   CC BY 3.0 (http://creativecommons.org/licenses/by/3.0/)
+    Homepage:  http://fortawesome.github.com/Font-Awesome/
