@@ -7,7 +7,7 @@
         <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>camelCase</title>
+        <title>{% if page.title %}{{ page.title }} - {% endif %}camelCase</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -31,7 +31,7 @@
                     {% endfor %}
                     </ul>
                 </nav>
-                <form class="search" action="" method="POST">
+                <form class="search" action="/search" method="GET">
                     <input type="text" name="s" value="" placeholder="search">
                 </form>
             </div>
@@ -52,7 +52,7 @@
                     {% endfor %}
                     </ul>
                 </nav>
-                <form class="search" action="" method="POST">
+                <form class="search" action="/search" method="GET">
                     <input type="text" name="s" value="" placeholder="search">
                 </form>
                 <div id="copyright"><a href="/humans.txt" target="_blank">&copy;</a> <span>2013 camelCa.se</span></div>

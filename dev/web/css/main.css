@@ -504,6 +504,13 @@ body,
     text-align: center;
 }
 
+.search-result-header {
+    width: 96%;
+    margin: 20px auto 0 auto;
+    text-align: center;
+    font-weight: normal;
+}
+
 /* About */
 .about {
     width: 96%;

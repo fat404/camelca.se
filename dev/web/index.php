@@ -5,9 +5,12 @@ $app = new Silex\Application();
 
 // Configuration
 $posts_per_page = 10;
+$search_results_per_page = 50;
 
 // Service Providers
 use \Michelf\MarkdownExtra;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
   'db.options' => array(
@@ -69,8 +72,10 @@ function getPostNav($app, $publish_date, $current_id) {
   return $post_nav;
 }
 
-function getPosts($app, $current = 0, $total = 0) {
-  global $posts_per_page;
+function getPosts($app, $current = 0, $total = 0, $query = '') {
+  global $posts_per_page, $search_results_per_page;
+
+  $per_page = $query ? $search_results_per_page : $posts_per_page;
   $sql = '';
   $offset = 0;
 
@@ -79,25 +84,36 @@ function getPosts($app, $current = 0, $total = 0) {
   }
 
   if ($current > 0 && $current < $total) {
-    $offset = ($total - $current) * $posts_per_page;
+    $offset = ($total - $current) * $per_page;
   }
 
-  $sql = "select * from posts where status = 'published' and type = 'post' order by publish_date desc, id desc limit $offset, $posts_per_page";
+  if (!$query) {
+    $sql = "select * from posts where status = 'published' and type = 'post' order by publish_date desc, id desc limit $offset, $per_page";
+  } else {
+    $sql = "select * from posts where status = 'published' and (title like '%$query%' or content like '%$query%') order by publish_date desc, type desc, id desc limit $offset, $per_page";
+  }
 
   $pages = $app['db']->fetchAll($sql);
 
   return $pages;
 }
 
-function getPostsNav($app, $current = 0) {
-  global $posts_per_page;
+function getPostsNav($app, $current = 0, $query = '') {
+  global $posts_per_page, $search_results_per_page;
+
+  $per_page = $query ? $search_results_per_page : $posts_per_page;
   $prev = 0;
   $next = 0;
 
-  $sql = "select count(*) from posts where status = 'published' and type = 'post'";
+  if (!$query) {
+    $sql = "select count(*) from posts where status = 'published' and type = 'post'";
+  } else {
+    $sql = "select count(*) from posts where status = 'published' and (title like '%$query%' or content like '%$query%')";
+  }
   $total = $app['db']->fetchColumn($sql);
 
-  $total = (int) ceil($total / $posts_per_page);
+  $raw_total = (int) $total;
+  $total = (int) ceil($total / $per_page);
 
   if ($current == 0 || $current > $total) {
     $current = $total;
@@ -123,7 +139,8 @@ function getPostsNav($app, $current = 0) {
     'total' => $total,
     'current' => $current,
     'prev' => $prev,
-    'next' => $next
+    'next' => $next,
+    'raw_total' => $raw_total
   );
 
   return $posts_nav;
@@ -178,6 +195,71 @@ $app->get('/archive/{page_num}', function($page_num) use ($app) {
   return $app['twig']->render('index.html', $data);
 });
 
+// search result page
+$app->get('/search', function(Request $request) use ($app) {
+  global $data;
+
+  $query = $request->get('s');
+  $page_num = 0;
+
+  $data['page'] = array(
+    'title' => "Search result(s) for '$query'",
+    'slug' => 'home',
+    'type' => 'page',
+    'post_nav' => 0,
+    'query' => $query,
+  );
+
+  $data['post_nav'] = getPostsNav($app, $page_num, $query);
+  $data['page']['post_nav'] = $data['post_nav']['total'];
+  $data['page']['total_results'] = $data['post_nav']['raw_total'];
+  
+  $data['posts'] = getPosts($app, $page_num, $data['post_nav']['total'], $query);
+
+  return $app['twig']->render('search-result.html', $data);
+});
+
+// search result pagination
+$app->get('/search/{query}', function($query, $page_num = 0) use ($app) {
+  global $data;
+
+  $data['page'] = array(
+    'title' => "Search result(s) for '$query'",
+    'slug' => 'home',
+    'type' => 'page',
+    'post_nav' => 0,
+    'query' => $query,
+  );
+
+  $data['post_nav'] = getPostsNav($app, $page_num, $query);
+  $data['page']['post_nav'] = $data['post_nav']['total'];
+  $data['page']['total_results'] = $data['post_nav']['raw_total'];
+  
+  $data['posts'] = getPosts($app, $page_num, $data['post_nav']['total'], $query);
+
+  return $app['twig']->render('search-result.html', $data);
+});
+
+$app->get('/search/{query}/{page_num}', function($query, $page_num) use ($app) {
+  global $data;
+
+  $data['page'] = array(
+    'title' => "Search result(s) for '$query'",
+    'slug' => 'home',
+    'type' => 'page',
+    'post_nav' => 0,
+    'query' => $query,
+  );
+
+  $data['post_nav'] = getPostsNav($app, $page_num, $query);
+  $data['page']['post_nav'] = $data['post_nav']['total'];
+  $data['page']['total_results'] = $data['post_nav']['raw_total'];
+  
+  $data['posts'] = getPosts($app, $page_num, $data['post_nav']['total'], $query);
+
+  return $app['twig']->render('search-result.html', $data);
+});
+
 // reserved page
 $app->get('/{page_slug}', function($page_slug) use ($app) {
   global $data;
@@ -200,7 +282,15 @@ $app->get('/post/{post_slug}', function($post_slug) use ($app) {
 
   return $app['twig']->render('post.html', $data);
 });
-// 
+
+$app->error(function (\Exception $e, $code) use ($app) {
+  if ($code == 404) {
+    return new Response($app['twig']->render('404.html', array(), 404));
+  }
+
+  return new Response('We are sorry, but something went terribly wrong.', $code);
+});
+
 $app['debug'] = true;
 
 $app->run();
