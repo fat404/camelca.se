@@ -520,21 +520,15 @@ body,
 }
 
 .about .profile-photo {
-    margin: 0;
-    float: left;
+    text-align: center;
 }
 
 .about .profile-photo img {
-    width: 150px;
-    margin: 0 10px 20px 0;
-    padding: 7px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    width: 96%;
+    border-radius: 10px;
 }
 
 .masthead {
-    width: 190px;
-    float: left;
     font-weight: 400;
 }
 
@@ -542,10 +536,6 @@ body,
 .about p,
 .about ul {
     margin: 1em 0;
-}
-
-.mobile-clearfix {
-    clear: both;
 }
 
 /* Contact */
@@ -593,17 +583,8 @@ body,
         padding: 10px;
     }
 
-    .about {
-        width: 536px;
-        padding: 20px 0;
-    }
-
     .about .profile-photo img {
-        width: 130px;
-    }
-
-    .masthead {
-        width: 380px;
+        width: 440px;
     }
 }
 
@@ -637,40 +618,9 @@ body,
         padding: 20px 0;
     }
 
-    .about {
-        width: 940px;
-        max-width: 940px;
-        margin: 0 auto;
-        padding: 20px 10px;
-    }
-
-    .about .profile-photo {
-        width: 385px;
-    }
-
     .about .profile-photo img {
-        width: 350px;
+        width: 440px;
         margin: 0 20px 0 0;
-    }
-
-    .masthead {
-        width: 550px;
-        margin-bottom: 10px
-    }
-
-    .about h3,
-    .about p {
-        width: 550px;
-        overflow: hidden;
-    }
-
-    .about ul {
-        width: 510px;
-        overflow: hidden;
-    }
-
-    .mobile-clearfix {
-        clear: none;
     }
 
     .desktop-clearfix {
