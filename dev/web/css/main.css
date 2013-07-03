@@ -524,7 +524,7 @@ body,
 }
 
 .about .profile-photo img {
-    width: 96%;
+    width: 100%;
     border-radius: 10px;
 }
 
