@@ -157,19 +157,31 @@ $data = array(
 );
 
 // editor
+$editor = array(
+  'title' => '',
+  'slug' => '',
+  'publish_date' => time(),
+  'content' => '',
+  'preview' => ''
+);
+
 $app->get('/editor', function() use ($app) {
-  return $app['twig']->render('editor.html');
+  global $editor;
+
+  return $app['twig']->render('editor.html', $editor);
 });
 
 $app->post('/editor', function(Request $request) use ($app) {
+  global $editor;
+
   $content = $request->get('content');
 
-  $data = array(
-    'request' => $request,
-    'preview' => markToHtml($content)
-  );
+  $editor['title'] = $request->get('title');
+  $editor['slug'] = $request->get('slug');
+  $editor['content'] = $request->get('content');
+  $editor['preview'] = markToHtml($content);
 
-  return $app['twig']->render('editor.html', $data);
+  return $app['twig']->render('editor.html', $editor);
 });
 
 // homepage

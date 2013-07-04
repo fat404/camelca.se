@@ -18,9 +18,9 @@
     </head>
     <body>
       <form action="/editor" method="POST">
-        <p><input type="text" name="title" placeholder="Title" value="{{ request.get('title') }}"></p>
-        <p><input type="text" name="slug" placeholder="Slug" value="{{ request.get('slug') }}"></p>
-        <textarea name="content">{{ request.get('content') }}</textarea>
+        <p><input type="text" name="title" placeholder="Title" value="{{ title }}" required></p>
+        <p><input type="text" name="slug" placeholder="Slug" value="{{ slug }}"></p>
+        <textarea name="content" required autofocus>{{ content }}</textarea>
         <p>
           <label><input type="radio" name="type" value="post" checked="checked"> Post</label>
           <label><input type="radio" name="type" value="page"> Page</label>
@@ -38,10 +38,10 @@
       <div class="preview">
         <div class="wrap">
           <header class="clearfix">
-              <h1>{{ request.get('title') }}</h1>
-              <div class="post-meta">{{ "now" | date('F d, Y') }}</div>
+              <h1>{{ title }}</h1>
+              <div class="post-meta">{{ publish_date | date('F d, Y') }}</div>
           </header>
-          {{ preview | raw}}
+          {{ preview | raw }}
         </div>
       </div>
     </body>
