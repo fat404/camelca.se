@@ -344,6 +344,7 @@ body,
     font-weight: normal;
     color: #000;
     text-decoration: none;
+    text-shadow: 1px 1px #000, 2px 2px #eee, 3px 3px #ddd;
 }
 
     #header h1 a:hover {
