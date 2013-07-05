@@ -34,6 +34,13 @@ label + label {
   display: inline-block;
 }
 
+a,
+a:visited,
+a:active,
+a:focus {
+  text-decoration: none;
+}
+
 .buttons {
   text-align: center;
 }

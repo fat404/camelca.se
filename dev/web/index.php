@@ -4,8 +4,12 @@ require_once __DIR__.'/../vendor/autoload.php';
 $app = new Silex\Application();
 
 // Configuration
-$posts_per_page = 10;
-$search_results_per_page = 50;
+$app['conf'] = array(
+  'posts_per_page' => 10,
+  'search_results_per_page' => 50,
+  'username' => 'admin',
+  'bcrypt' => '$2y$10$BQ1qC4S0YmOChM0SVwoYE.X6UrY00ngxR1W4vBFr69MEnoTCSYeGK'
+);
 
 // Service Providers
 use \Michelf\MarkdownExtra;
@@ -75,9 +79,7 @@ function getPostNav($app, $publish_date, $current_id) {
 }
 
 function getPosts($app, $current = 0, $total = 0, $query = '') {
-  global $posts_per_page, $search_results_per_page;
-
-  $per_page = $query ? $search_results_per_page : $posts_per_page;
+  $per_page = $query ? $app['conf']['search_results_per_page'] : $app['conf']['posts_per_page'];
   $sql = '';
   $offset = 0;
 
@@ -108,9 +110,7 @@ function getPosts($app, $current = 0, $total = 0, $query = '') {
 }
 
 function getPostsNav($app, $current = 0, $query = '') {
-  global $posts_per_page, $search_results_per_page;
-
-  $per_page = $query ? $search_results_per_page : $posts_per_page;
+  $per_page = $query ? $app['conf']['search_results_per_page'] : $app['conf']['posts_per_page'];
   $prev = 0;
   $next = 0;
 
@@ -174,13 +174,50 @@ $editor = array(
   'preview' => ''
 );
 
+$app->get('/getpass/{pass}', function ($pass) use ($app) {
+  return $app['twig']->render('getpass.html', array(
+    'hash' => password_hash($pass, PASSWORD_BCRYPT)
+  ));
+});
+
+$app->get('/login', function () use ($app) {
+  return $app['twig']->render('login.html');
+});
+
+$app->post('/login', function (Request $request) use ($app) {
+  $username = $request->get('username');
+  $password = $request->get('password');
+
+  if ($username === $app['conf']['username'] && password_verify($password, $app['conf']['bcrypt'])) {
+    $app['session']->set('user', array('username' => $username));
+
+    return $app->redirect('/editor');
+  }
+
+  return $app['twig']->render('login.html', array('message' => 'Incorrect login.'));
+});
+
+$app->get('/logout', function () use ($app) {
+  $app['session']->clear();
+
+  return $app->redirect('/login');
+});
+
 $app->get('/editor', function() use ($app) {
+  if (!$app['session']->get('user')) {
+    return $app->redirect('/login');
+  }
+
   global $editor;
 
   return $app['twig']->render('editor.html', $editor);
 });
 
 $app->post('/editor', function(Request $request) use ($app) {
+  if (!$app['session']->get('user')) {
+    return $app->redirect('/login');
+  }
+
   global $editor;
 
   $content = $request->get('content');
