@@ -214,3 +214,8 @@ a:focus {
     margin: 2% auto 10% auto;
   }
 }
+
+#login form {
+  width: 240px;
+  margin: 0 auto;
+}

@@ -15,7 +15,7 @@
 
         <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
-    <body>
+    <body id="login">
       <form action="/login" method="POST">
           <h2>{% if message is defined %}{{ message }}{% else %}Login to continue.{% endif %}</h2>
           <p><input type="text" name="username" placeholder="username" required autofocus></p>

@@ -8,7 +8,8 @@ $app['conf'] = array(
   'posts_per_page' => 10,
   'search_results_per_page' => 50,
   'username' => 'admin',
-  'bcrypt' => '$2y$10$BQ1qC4S0YmOChM0SVwoYE.X6UrY00ngxR1W4vBFr69MEnoTCSYeGK'
+  'bcrypt' => '$2y$10$BQ1qC4S0YmOChM0SVwoYE.X6UrY00ngxR1W4vBFr69MEnoTCSYeGK',
+  'session_timeout' => 14 //days
 );
 
 // Service Providers
@@ -189,7 +190,10 @@ $app->post('/login', function (Request $request) use ($app) {
   $password = $request->get('password');
 
   if ($username === $app['conf']['username'] && password_verify($password, $app['conf']['bcrypt'])) {
-    $app['session']->set('user', array('username' => $username));
+    $app['session']->set('user', array(
+      'username' => $username,
+      'logged_in' => time()
+    ));
 
     return $app->redirect('/editor');
   }
@@ -208,6 +212,10 @@ $app->get('/editor', function() use ($app) {
     return $app->redirect('/login');
   }
 
+  if (time() - $app['session']->get('user')['logged_in'] > ($app['conf']['session_timeout'] * 24 * 60 * 60)) {
+    return $app->redirect('/login');
+  }
+
   global $editor;
 
   return $app['twig']->render('editor.html', $editor);
@@ -215,6 +223,10 @@ $app->get('/editor', function() use ($app) {
 
 $app->post('/editor', function(Request $request) use ($app) {
   if (!$app['session']->get('user')) {
+    return $app->redirect('/login');
+  }
+
+  if (time() - $app['session']->get('user')['logged_in'] > ($app['conf']['session_timeout'] * 24 * 60 * 60)) {
     return $app->redirect('/login');
   }
 
