@@ -90,7 +90,14 @@ function getPosts($app, $current = 0, $total = 0, $query = '') {
   if (!$query) {
     $sql = "select * from posts where status = 'published' and type = 'post' order by publish_date desc, id desc limit $offset, $per_page";
   } else {
-    $sql = "select * from posts where status = 'published' and (title like '%$query%' or content like '%$query%') order by publish_date desc, type desc, id desc limit $offset, $per_page";
+    $keywords = explode(' ', $query);
+    $keywords = array_map(function($keyword) {
+      return '\'%' . $keyword . '%\'';
+    }, $keywords);
+    $title_likes = implode(' OR title like ', $keywords);
+    $content_likes = implode(' OR content like ', $keywords);
+
+    $sql = "select * from posts where status = 'published' and ((title like $title_likes) or (content like $content_likes)) order by publish_date desc, type desc, id desc limit $offset, $per_page";
   }
 
   $pages = $app['db']->fetchAll($sql);
