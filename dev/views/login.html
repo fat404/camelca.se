@@ -17,7 +17,7 @@
     </head>
     <body>
       <form action="/login" method="POST">
-          <h2>{% if message is defined %}{{ message }}{% else %}Login to continue...{% endif %}</h2>
+          <h2>{% if message is defined %}{{ message }}{% else %}Login to continue.{% endif %}</h2>
           <p><input type="text" name="username" placeholder="username" required autofocus></p>
           <p><input type="password" name="password" placeholder="password" required></p>
           <p><input type="submit" value="Login"></p>
