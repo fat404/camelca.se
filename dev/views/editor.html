@@ -20,7 +20,7 @@
       <form action="/editor" method="POST">
         <p><input type="text" name="title" placeholder="Title" value="{{ title }}" required></p>
         <p><input type="text" name="slug" placeholder="Slug" value="{{ slug }}"></p>
-        <textarea name="content" required autofocus>{{ content }}</textarea>
+        <textarea id="text-input" name="content" placeholder="Markdown" oninput="this.editor.update()" required autofocus>{{ content }}</textarea>
         <p>
           <label><input type="radio" name="type" value="post" checked="checked"> Post</label>
           <label><input type="radio" name="type" value="page"> Page</label>
@@ -41,8 +41,22 @@
               <h1>{{ title }}</h1>
               <div class="post-meta">{{ publish_date | date('F d, Y') }}</div>
           </header>
+          <div id="preview">
           {{ preview | raw }}
+          </div>
         </div>
       </div>
+      <script src="/js/markdown.js"></script>
+      <script>
+        function Editor(input, preview) {
+          this.update = function () {
+            preview.innerHTML = markdown.toHTML(input.value);
+          };
+          input.editor = this;
+          this.update();
+        }
+        var $ = function (id) { return document.getElementById(id); };
+        new Editor($("text-input"), $("preview"));
+      </script>
     </body>
 </html>
