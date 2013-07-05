@@ -12,6 +12,8 @@ $app['conf'] = array(
   'session_timeout' => 14 //days
 );
 
+date_default_timezone_set('Asia/Kuala_Lumpur');
+
 // Service Providers
 use \Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,32 +40,42 @@ function getMainMenu ($app) {
   return $main_menu;
 }
 
-function getPage($app, $slug) {
-  $sql = "select * from posts where status = 'published' and type = 'page' and slug = ?";
-  $page = $app['db']->fetchAssoc($sql, array($slug));
-  $page['content'] = markToHtml($page['content']);
+function getPost($app, $slug) {
+  $sql = "select * from posts where slug = ?";
+  $post = $app['db']->fetchAssoc($sql, array($slug));
 
-  return $page;
+  if ($post) {
+    $post['content'] = markToHtml($post['content']);
+  }
+
+  return $post;
 }
 
-function getPost($app, $slug) {
-  $sql = "select * from posts where status = 'published' and type = 'post' and slug = ?";
+function getPublishedPost($app, $slug, $type = '') {
+  if ($type) {
+    $type = "and type ='$type'";
+  }
+
+  $sql = "select * from posts where status = 'published' $type and slug = ?";
   $post = $app['db']->fetchAssoc($sql, array($slug));
-  $post['content'] = markToHtml($post['content']);
+
+  if ($post) {
+    $post['content'] = markToHtml($post['content']);
+  }
 
   return $post;
 }
 
 function getPostNav($app, $publish_date, $current_id) {
-  $prev_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id < ?) or (publish_date < timestamp(?) and id > ?))and type = 'post' order by publish_date desc, id desc limit 1";
-  $prev_post = $app['db']->fetchAssoc($prev_sql, array($publish_date, $current_id, $publish_date, $current_id));
+  $prev_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id < ?) or publish_date < timestamp(?)) and type = 'post' order by publish_date desc, id desc limit 1";
+  $prev_post = $app['db']->fetchAssoc($prev_sql, array($publish_date, $current_id, $publish_date));
 
   if ($current_id == $prev_post['id']) {
     $prev_post['slug'] = 0;
   }
 
-  $next_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id > ?) or (publish_date > timestamp(?) and id < ?))and type = 'post' order by publish_date, id limit 1";
-  $next_post = $app['db']->fetchAssoc($next_sql, array($publish_date, $current_id, $publish_date, $current_id));
+  $next_sql = "select id, title, slug from posts where status = 'published' and ((publish_date = timestamp(?) and id > ?) or publish_date > timestamp(?)) and type = 'post' order by publish_date, id limit 1";
+  $next_post = $app['db']->fetchAssoc($next_sql, array($publish_date, $current_id, $publish_date));
 
   if ($current_id == $next_post['id']) {
     $next_post['slug'] = 0;
@@ -156,10 +168,65 @@ function getPostsNav($app, $current = 0, $query = '') {
   return $posts_nav;
 }
 
+function insertIntoPosts($app, $data) {
+  $status = $app['db']->insert('posts', array(
+    'title' => $data['title'],
+    'slug' => $data['slug'],
+    'content' => $data['content'],
+    'type' => $data['type'],
+    'main_menu' => $data['main_menu'] ? 1 : 0,
+    'seq' => $data['seq'] ? $data['seq'] : 0,
+    'status' => $data['status'],
+    'publish_date' => date('Y-m-d H:i:s', strtotime($data['publish_date']))
+  ));
+
+  return $status;
+}
+
+function updatePost($app, $data) {
+  $status = $app['db']->update('posts', array(
+    'title' => $data['title'],
+    'content' => $data['content'],
+    'type' => $data['type'],
+    'main_menu' => $data['main_menu'] ? 1 : 0,
+    'seq' => $data['seq'] ? $data['seq'] : 0,
+    'status' => $data['status'],
+    'publish_date' => date('Y-m-d H:i:s', strtotime($data['publish_date']))
+  ), array(
+    'slug' => $data['slug'],
+  ));
+
+  return $status;
+}
+
 function markToHtml($markdown) {
   $html = MarkdownExtra::defaultTransform($markdown);
 
   return $html;
+}
+
+function slugify($text) { 
+  // replace non letter or digits by -
+  $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+
+  // trim
+  $text = trim($text, '-');
+
+  // transliterate
+  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+  // lowercase
+  $text = strtolower($text);
+
+  // remove unwanted characters
+  $text = preg_replace('~[^-\w]+~', '', $text);
+
+  if (empty($text))
+  {
+    return 'n-a';
+  }
+
+  return $text;
 }
 
 $data = array(
@@ -172,7 +239,11 @@ $editor = array(
   'slug' => '',
   'publish_date' => time(),
   'content' => '',
-  'preview' => ''
+  'preview' => '',
+  'type' => '',
+  'main_menu' => '',
+  'seq' => '',
+  'status' => ''
 );
 
 $app->get('/getpass/{pass}', function ($pass) use ($app) {
@@ -233,11 +304,48 @@ $app->post('/editor', function(Request $request) use ($app) {
   global $editor;
 
   $content = $request->get('content');
+  $slug = trim(slugify($request->get('title')));
+  $action = $request->get('action');
 
   $editor['title'] = $request->get('title');
-  $editor['slug'] = $request->get('slug');
+  $editor['slug'] = $slug;
   $editor['content'] = $request->get('content');
   $editor['preview'] = markToHtml($content);
+  $editor['publish_date'] = $request->get('publish_date');
+  $editor['type'] = $request->get('type');
+  $editor['main_menu'] = $request->get('main_menu');
+  $editor['seq'] = $request->get('seq');
+  $editor['status'] = $request->get('status');
+
+  if ($action != 'Preview') {
+    $status = 0;
+
+    if ($action == 'Publish') {
+      $editor['status'] = 'published';
+    } elseif ($action == 'Unpublish') {
+      $editor['status'] = 'unpublished';
+    } else {
+      if (!$editor['status']) {
+        $editor['status'] = 'draft';
+      }
+    }
+    
+    if (!getPost($app, $slug)) {
+      $status = insertIntoPosts($app, $editor);
+    } else {
+      $status = updatePost($app, $editor);
+    }
+
+    if ($editor['status'] == 'published') {
+      $is_post = $editor['type'] == 'post' ? 'post/' : '';
+
+      $editor['message'] = 'Published: <a href="/'.$is_post.$slug.'" target="_blank">/'.$slug.'</a>';
+    } elseif ($status) {
+      $editor['message'] = 'Page saved';
+    }
+  }
+
+  // $editor['message'] = var_dump(getPost($app, 'test'));
 
   return $app['twig']->render('editor.html', $editor);
 });
@@ -350,7 +458,7 @@ $app->get('/search/{query}/{page_num}', function($query, $page_num) use ($app) {
 $app->get('/{page_slug}', function($page_slug) use ($app) {
   global $data;
 
-  $data['page'] = getPage($app, $page_slug);
+  $data['page'] = getPublishedPost($app, $page_slug, 'page');
 
   return $app['twig']->render('page.html', $data);
 });
@@ -359,7 +467,7 @@ $app->get('/{page_slug}', function($page_slug) use ($app) {
 $app->get('/post/{post_slug}', function($post_slug) use ($app) {
   global $data;
 
-  $data['page'] = getPost($app, $post_slug);
+  $data['page'] = getPublishedPost($app, $post_slug, 'post');
   $data['post_nav'] = getPostNav($app, $data['page']['publish_date'], $data['page']['id']);
 
   if ($data['post_nav']['prev'] || $data['post_nav']['next']) {
