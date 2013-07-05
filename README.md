@@ -22,6 +22,16 @@
     Fonts: Droid Serif, Open Sans, Consolas
 
 ## CHANGELOG
+    v0.9 - 2013-07-05
+    * tons of updates
+    * added editor and update/insert to interact with db
+    * styled editor to be responsive
+    * added /login, /logout, /getpass/<pass>, session, session timeout, bcrypt
+    * added markdown-js into editor
+    * added a custom feature into the js markdown editor where typing in textarea will scroll preview into view
+    * improved search function to search by keywords
+    * added initial-scale=1.0 to fix iphone landscape issue
+    * restyled about page, profile picture now centers
 
     v0.8 - 2013-07-02
     * added post-nav feature on homepage, post page and search result page
@@ -81,8 +91,6 @@
   
     * Nexus 4 / landing-page-esque about page
     * portfolio
-    * cms screen
-    * login
     * mobile testing
 
 ## DOCUMENTATION
