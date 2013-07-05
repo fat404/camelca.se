@@ -1,9 +1,7 @@
 form {
-  width: 42%;
+  width: 96%;
   margin: 0;
   padding: 1% 2%;
-  display: inline-block;
-  vertical-align: top;
 }
 
 input,
@@ -15,7 +13,7 @@ textarea {
 }
 
 textarea {
-  height: 500px;
+  height: 250px;
   font-family: 'Consolas', 'Courier New', monospace;
 }
 
@@ -50,22 +48,10 @@ label + label {
 }
 
 .preview {
-  width: 50%;
-  height: 92%;
+  width: 96%;
   margin: 0;
-  padding: 2%;
-  position: absolute;
-  top: 0;
-  right: 0;
-  overflow: auto;
-  display: inline-block;
-  vertical-align: top;
+  padding: 5% 2%;
   background: #eee;
-}
-
-.wrap {
-  width: 640px;
-  margin: 0 auto;
 }
 
 .preview header {
@@ -192,4 +178,32 @@ label + label {
 .preview pre code {
     font-family: 'Consolas', 'Courier New', monospace;
     font-size: 14px;
+}
+
+@media only screen and (min-width: 640px) {   
+  form {
+    width: 46%;
+    margin: 0;
+    padding: 1% 2%;
+  }
+
+  textarea {
+    height: 400px;
+  }
+
+  .preview {
+    width: 46%;
+    height: 100%;
+    margin: 0;
+    padding: 0 2%;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 2% auto 10% auto;
+  }
 }

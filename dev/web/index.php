@@ -23,6 +23,8 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/../views',
 ));
 
+$app->register(new Silex\Provider\SessionServiceProvider());
+
 // Database Methods
 function getMainMenu ($app) {
   $sql = "select title, slug from posts where status = 'published' and main_menu = 1 order by seq";

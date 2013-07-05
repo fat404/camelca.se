@@ -9,7 +9,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>camelCase</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" href="/css/normalize.min.css">
         <link rel="stylesheet" href="/css/editor.css">
@@ -46,11 +46,27 @@
           </div>
         </div>
       </div>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
       <script src="/js/markdown.js"></script>
       <script>
+        var scroll;
+        (function($) {
+          scroll = function() {
+            var textarea_current = $('#text-input').scrollTop();
+            var textarea_height = $('#text-input')[0].scrollHeight - $('#text-input').innerHeight();
+            var textarea_percent = textarea_current / textarea_height;
+
+            var preview_height = $('.preview')[0].scrollHeight - $('.preview').innerHeight();
+            var preview_current = parseInt(textarea_percent * preview_height);
+            $(".preview").scrollTop(preview_current);
+          };
+
+        })(jQuery);
+
         function Editor(input, preview) {
           this.update = function () {
             preview.innerHTML = markdown.toHTML(input.value);
+            scroll();
           };
           input.editor = this;
           this.update();
