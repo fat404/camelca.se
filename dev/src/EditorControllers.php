@@ -52,7 +52,11 @@ $app->get('/editor', function() use ($app) {
     return $app->redirect('/login');
   }
 
-  if (time() - $app['session']->get('user')['logged_in'] > ($app['conf']['session_timeout'] * 24 * 60 * 60)) {
+  $user = $app['session']->get('user');
+  $logged_in = $user['logged_in'];
+  $timeout = $app['conf']['session_timeout'] * 24 * 60 * 60;
+
+  if (time() - $logged_in > $timeout) {
     return $app->redirect('/login');
   }
 
@@ -66,7 +70,11 @@ $app->post('/editor', function(Request $request) use ($app) {
     return $app->redirect('/login');
   }
 
-  if (time() - $app['session']->get('user')['logged_in'] > ($app['conf']['session_timeout'] * 24 * 60 * 60)) {
+  $user = $app['session']->get('user');
+  $logged_in = $user['logged_in'];
+  $timeout = $app['conf']['session_timeout'] * 24 * 60 * 60;
+
+  if (time() - $logged_in > $timeout) {
     return $app->redirect('/login');
   }
 

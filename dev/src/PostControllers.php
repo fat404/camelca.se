@@ -10,6 +10,11 @@ $app->get('/', function() use ($app) {
   );
 
   $data['posts'] = getPosts($app);
+
+  if (!$data['posts']) {
+    $app->abort(500);
+  }
+
   $data['post_nav'] = getPostsNav($app);
   if ($data['post_nav']['total']) {
     $data['page']['post_nav'] = 1;
@@ -33,6 +38,10 @@ $app->get('/archive/{page_num}', function($page_num) use ($app) {
   
   $data['posts'] = getPosts($app, $page_num, $data['post_nav']['total']);
 
+  if (!$data['posts']) {
+    $app->abort(500);
+  }
+
   return $app['twig']->render('index.html', $data);
 });
 
@@ -45,6 +54,10 @@ $app->get('/post/{post_slug}', function($post_slug) use ($app) {
 
   if ($data['post_nav']['prev'] || $data['post_nav']['next']) {
     $data['page']['post_nav'] = 1;
+  }
+
+  if (!$data['page']) {
+    $app->abort(404);
   }
 
   return $app['twig']->render('post.html', $data);
