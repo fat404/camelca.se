@@ -2,7 +2,7 @@
     Options -MultiViews
 
     RewriteEngine On
-    #RewriteBase /camelca.se/dev
+    #RewriteBase /web
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ web/index.php [QSA,L]
 </IfModule>

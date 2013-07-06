@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block page_title %}
+{{ page.total_results }} result(s) for '{{ page.query }}' - 
+{% endblock %}
+
 {% block main %}
 
             <h2 class="search-result-header">Returned <strong>{{ page.total_results }}</strong> result(s) for <strong>'{{ page.query }}'</strong></h2>
