@@ -62,6 +62,11 @@ $app->post('/editor', function(Request $request) use ($app) {
   $content = $request->get('content');
   $action = $request->get('action');
 
+  // magic quotes fix
+  if (get_magic_quotes_gpc()) {
+    $content = stripslashes($content);
+  }
+
   $editor = array(
     'id' => $id,
     'title' => $request->get('title'),
@@ -122,6 +127,8 @@ $app->post('/editor/yes', function(Request $request) use ($app) {
   global $editor;
   $status_code = $request->get('status_code');
   $editor = $request->get('editor');
+
+  $editor['message'] = '';
 
   if (!$editor) {
     $editor['message'] = 'Error occured';
