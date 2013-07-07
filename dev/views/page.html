@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
 
-{% block page_title %}
-{{ page.title }} - 
-{% endblock %}
+{% block page_title %} {{ page.title }} - {{ parent() }}{% endblock %}
+{% block slug %} class="page-{{ page.slug }}"{% endblock %}
 
 {% block main %}
-
-<article class="post{% if page.slug %} {{ page.slug }}{% endif %}">
-  {{ page.content | raw }}
-</article>
-
+    <article class="post{% if page.slug %} {{ page.slug }}{% endif %}">
+        {{ page.html | raw }}
+    </article>
 {% endblock %}

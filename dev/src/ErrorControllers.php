@@ -5,13 +5,9 @@ use Symfony\Component\HttpFoundation\Response;
 $app->error(function (\Exception $e, $code) use ($app) {
   global $data;
 
-  $data['page'] = array(
-    'title' => '',
-    'slug' => '',
-    'type' => 'page',
-    'post_nav' => 0,
-    'message' => 'Nope.'
-  );
+  if ($app['debug']) {
+    return;
+  }
 
   switch ($code) {
     case 404:

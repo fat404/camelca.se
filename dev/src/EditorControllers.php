@@ -2,13 +2,15 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 $editor = array(
+  'id' => '',
   'title' => '',
   'slug' => '',
   'publish_date' => time(),
   'content' => '',
-  'preview' => '',
+  'html' => '',
   'type' => '',
   'main_menu' => '',
   'seq' => '',
@@ -48,55 +50,34 @@ $app->get('/logout', function () use ($app) {
 });
 
 $app->get('/editor', function() use ($app) {
-  if (!$app['session']->get('user')) {
-    return $app->redirect('/login');
-  }
-
-  $user = $app['session']->get('user');
-  $logged_in = $user['logged_in'];
-  $timeout = $app['conf']['session_timeout'] * 24 * 60 * 60;
-
-  if (time() - $logged_in > $timeout) {
-    return $app->redirect('/login');
-  }
-
   global $editor;
 
   return $app['twig']->render('editor.html', $editor);
-});
+})->before($validateSession);
 
 $app->post('/editor', function(Request $request) use ($app) {
-  if (!$app['session']->get('user')) {
-    return $app->redirect('/login');
-  }
-
-  $user = $app['session']->get('user');
-  $logged_in = $user['logged_in'];
-  $timeout = $app['conf']['session_timeout'] * 24 * 60 * 60;
-
-  if (time() - $logged_in > $timeout) {
-    return $app->redirect('/login');
-  }
-
   global $editor;
 
+  $id = $request->get('id');
   $content = $request->get('content');
-  $slug = trim(slugify($request->get('title')));
   $action = $request->get('action');
 
-  $editor['title'] = $request->get('title');
-  $editor['slug'] = $slug;
-  $editor['content'] = $request->get('content');
-  $editor['preview'] = markToHtml($content);
-  $editor['publish_date'] = $request->get('publish_date');
-  $editor['type'] = $request->get('type');
-  $editor['main_menu'] = $request->get('main_menu');
-  $editor['seq'] = $request->get('seq');
-  $editor['status'] = $request->get('status');
+  $editor = array(
+    'id' => $id,
+    'title' => $request->get('title'),
+    'slug' => trim(slugify($request->get('title'))),
+    'content' => $content,
+    'html' => markToHtml($content),
+    'publish_date' => $request->get('publish_date'),
+    'type' => $request->get('type'),
+    'main_menu' => $request->get('main_menu'),
+    'seq' => $request->get('seq'),
+    'status' => $request->get('status')
+  );
+
+  $status_code = 0;
 
   if ($action != 'Preview') {
-    $status = 0;
-
     if ($action == 'Publish') {
       $editor['status'] = 'published';
     } elseif ($action == 'Unpublish') {
@@ -106,23 +87,107 @@ $app->post('/editor', function(Request $request) use ($app) {
         $editor['status'] = 'draft';
       }
     }
-    
-    if (!getPost($app, $slug)) {
-      $status = insertIntoPosts($app, $editor);
+    if ($id && getPostById($app, $id)) {
+      $status_code = updatePost($app, $id, $editor);
     } else {
-      $status = updatePost($app, $editor);
+      $slug = trim(slugify($request->get('title')));
+      if (!getPost($app, $slug)) {
+        $status_code = insertIntoPosts($app, $editor);
+      } else {
+        $status_code = 20;
+      }
+    }
+  }
+
+  $subRequest = Request::create('/editor/yes', 'POST', array(
+    'status_code' => $status_code,
+    'editor' => $editor
+  ));
+
+  return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+})->before($validateSession);
+
+$app->get('/editor/{slug}', function($slug) use ($app) {
+
+  $editor = getPost($app, $slug);
+
+  if (!$editor) {
+    return $app->redirect('/editor');
+  }
+
+  return $app['twig']->render('editor.html', $editor);
+})->before($validateSession);
+
+$app->post('/editor/yes', function(Request $request) use ($app) {
+  global $editor;
+  $status_code = $request->get('status_code');
+  $editor = $request->get('editor');
+
+  if (!$editor) {
+    $editor['message'] = 'Error occured';
+  } else {
+    if ($status_code) {
+      if ($editor['id']) {
+        $editor = getPostById($app, $editor['id']);
+      } else {
+        $editor = getPost($app, $editor['slug']);
+      }
+
+      if ($status_code != 20) {
+        $editor['message'] = 'Page saved. ';
+      } elseif ($status_code == 20) {
+        $editor['message'] = 'Error: Slug already exists';
+      }
     }
 
     if ($editor['status'] == 'published') {
       $is_post = $editor['type'] == 'post' ? 'post/' : '';
-
-      $editor['message'] = 'Published: <a href="/'.$is_post.$slug.'" target="_blank">/'.$slug.'</a>';
-    } elseif ($status) {
-      $editor['message'] = 'Page saved';
+      $editor['message'] .= '<a href="/'.$is_post.$editor['slug'].'" target="_blank">/'.$is_post.$editor['slug'].'</a>';
     }
   }
 
-  // $editor['message'] = var_dump(getPost($app, 'test'));
-
   return $app['twig']->render('editor.html', $editor);
-});
+})->before($validateSession);
+
+
+$app->post('/editor/delete', function (Request $request) use ($app) {
+  global $editor;
+
+  $id = $request->get('id');
+
+  if (!$id) {
+    $editor['message'] = "Error: No ID";
+    return $app['twig']->render('editor.html', $editor);
+  } else {
+    $post = getPostById($app, $id);
+
+    if ($post) {
+      if ($request->get('action') == 'Yes') {
+        $title = $post['title'];
+        $slug = $post['slug'];
+
+        $status = deletePost($app, $id);
+
+        if ($status) {
+          $editor['message'] = "Post $title ($slug) deleted";
+        } else {
+          $editor['message'] = "Error: Cannot delete $title (<a href=\"/editor/$slug\">$slug</a>)";
+        }
+
+        return $app['twig']->render('editor.html', $editor);
+      }
+
+      return $app->redirect('/editor/' . $post['slug']);
+    }
+  }
+  
+})->before($validateSession);
+
+$app->get('/editor/delete/{id}', function ($id) use ($app) {
+  $post = getPostById($app, $id);
+
+  return $app['twig']->render('delete.html', array(
+    'id' => $post['id'],
+    'title' => $post['title']
+  ));
+})->before($validateSession);

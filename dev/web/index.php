@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../src/Configuration.php';
+require_once __DIR__.'/../src/HelperMethods.php'; // Helper Methods
 require_once __DIR__.'/../src/DatabaseMethods.php'; // Database Methods
-require_once __DIR__.'/../src/HelperMethods.php'; // Database Methods
 
 $app = new Silex\Application();
 
@@ -9,16 +10,8 @@ $app = new Silex\Application();
 /*
  * Configuration
  */
-$app['conf'] = array(
-  'posts_per_page' => 10,
-  'search_results_per_page' => 50,
-  'username' => 'admin',
-  'bcrypt' => '$2y$10$BQ1qC4S0YmOChM0SVwoYE.X6UrY00ngxR1W4vBFr69MEnoTCSYeGK',
-  'session_timeout' => 14, //days
-  'dbname' => 'camelcase',
-  'dbuser' => 'root',
-  'dbpass' => ''
-);
+$app['debug'] = true;
+$app['conf'] = $configuration;
 
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
@@ -58,7 +51,6 @@ require_once __DIR__.'/../src/PostControllers.php';
 require_once __DIR__.'/../src/SearchControllers.php';
 require_once __DIR__.'/../src/PageControllers.php';
 
-// $app['debug'] = true;
 require_once __DIR__.'/../src/ErrorControllers.php';
 
 

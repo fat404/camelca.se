@@ -1,82 +1,69 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>camelCase</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base_backend.html' %}
 
-        <link rel="stylesheet" href="/css/normalize.min.css">
-        <link rel="stylesheet" href="/css/editor.css">
+{% block page_title %} Editor - {{ parent() }} {% endblock %}
+{% block slug %} id="editor"{% endblock %}
 
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-      <form action="/editor" method="POST">
-        {% if status is defined %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
-        <h3>{% if message is defined %}{{ message | raw }}{% endif %}</h3>
-        <p><input type="text" name="title" placeholder="Title" value="{{ title }}" required></p>
-        <p><input type="text" name="slug" placeholder="Slug" value="{{ slug }}" disabled></p>
-        <textarea id="text-input" name="content" placeholder="Markdown" oninput="this.editor.update()" required autofocus>{{ content }}</textarea>
-        <p><input type="text" name="publish_date" placeholder="Publish Date" value="{{ publish_date | date('F d, Y h:ia') }}"></p>
-        <p>
-          <label><input type="radio" name="type" value="post" {% if type != 'page' %}checked="checked"{% endif %}> Post</label>
-          <label><input type="radio" name="type" value="page" {% if type == 'page' %}checked="checked"{% endif %}> Page</label>
-        </p>
-        <p class="menu">
-          <label><input type="checkbox" name="main_menu" {% if main_menu %}checked="checked"{% endif %}> Show on navigation menu</label>
-          <input type="text" name="seq" placeholder="Sequence" value="{{ seq }}">
-        </p>
-        <p class="buttons">
-          <input type="submit" name="action" value="Preview">
-          <input type="submit" name="action" value="Save">
-          <input type="submit" name="action" value="{% if status == 'published' %}Unpublish{% else %}Publish{% endif %}">
-        </p>
-        <p><a href="/logout">[Logout]</a></p>
-      </form>
-      <div class="preview">
-        <div class="wrap">
-          <header class="clearfix">
-              <h1>{{ title }}</h1>
-              <div class="post-meta">{{ publish_date | date('F d, Y') }}</div>
-          </header>
-          <div id="preview">
-          {{ preview | raw }}
-          </div>
-        </div>
+{% block main %}
+  <form action="/editor" method="POST">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="status" value="{{ status }}">
+    <h4>{% if message is defined %}{{ message | raw }}{% else %}&nbsp;{% endif %}</h4>
+    <p><input type="text" name="title" placeholder="Title" value="{{ title }}" required></p>
+    <p><input type="text" name="slug" placeholder="Slug" value="{{ slug }}" disabled></p>
+    <textarea id="text-input" name="content" placeholder="Markdown" oninput="this.editor.update()" required autofocus>{{ content }}</textarea>
+    <p><input type="text" name="publish_date" placeholder="Publish Date" value="{{ publish_date | date('F d, Y h:ia') }}"></p>
+    <p>
+      <label><input type="radio" name="type" value="post" {% if type != 'page' %}checked="checked"{% endif %}> Post</label>
+      <label><input type="radio" name="type" value="page" {% if type == 'page' %}checked="checked"{% endif %}> Page</label>
+    </p>
+    <p class="menu">
+      <label><input type="checkbox" name="main_menu" {% if main_menu %}checked="checked"{% endif %}> Show on navigation menu</label>
+      <input type="text" name="seq" placeholder="Sequence" value="{{ seq }}">
+    </p>
+    <p class="buttons">
+      <input type="submit" name="action" value="Preview">
+      <input type="submit" name="action" value="Save">
+      <input type="submit" name="action" value="{% if status == 'published' %}Unpublish{% else %}Publish{% endif %}">
+    </p>
+    <p>{% if id %}<a href="/editor/delete/{{ id }}">[Delete]</a> | {% endif %}<a href="/logout">[Logout]</a></p>
+  </form>
+  <div class="preview">
+    <div class="wrap">
+      <header class="clearfix">
+          <h1>{{ title }}</h1>
+          <div class="post-meta">{{ publish_date | date('F d, Y') }}</div>
+      </header>
+      <div id="preview">
+      {{ html | raw }}
       </div>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-      <script src="/js/markdown.js"></script>
-      <script>
-        var scroll;
-        (function($) {
-          scroll = function() {
-            var textarea_current = $('#text-input').scrollTop();
-            var textarea_height = $('#text-input')[0].scrollHeight - $('#text-input').innerHeight();
-            var textarea_percent = textarea_current / textarea_height;
+    </div>
+  </div>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="/js/markdown.js"></script>
+  <script>
+    var scroll;
+    (function($) {
+      scroll = function() {
+        var textarea_current = $('#text-input').scrollTop();
+        var textarea_height = $('#text-input')[0].scrollHeight - $('#text-input').innerHeight();
+        var textarea_percent = textarea_current / textarea_height;
 
-            var preview_height = $('.preview')[0].scrollHeight - $('.preview').innerHeight();
-            var preview_current = parseInt(textarea_percent * preview_height);
-            $(".preview").scrollTop(preview_current);
-          };
+        var preview_height = $('.preview')[0].scrollHeight - $('.preview').innerHeight();
+        var preview_current = parseInt(textarea_percent * preview_height);
+        $(".preview").scrollTop(preview_current);
+      };
 
-        })(jQuery);
+    })(jQuery);
 
-        function Editor(input, preview) {
-          this.update = function () {
-            preview.innerHTML = markdown.toHTML(input.value);
-            scroll();
-          };
-          input.editor = this;
-          this.update();
-        }
-        var $ = function (id) { return document.getElementById(id); };
-        new Editor($("text-input"), $("preview"));
-      </script>
-    </body>
-</html>
+    function Editor(input, preview) {
+      this.update = function () {
+        preview.innerHTML = markdown.toHTML(input.value);
+        scroll();
+      };
+      input.editor = this;
+      this.update();
+    }
+    var $ = function (id) { return document.getElementById(id); };
+    new Editor($("text-input"), $("preview"));
+  </script>
+{% endblock %}

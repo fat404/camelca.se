@@ -1,0 +1,15 @@
+{% extends 'base_backend.html' %}
+
+{% block page_title %}Confirm Delete - {{ parent() }}{% endblock %}
+{% block slug %} id="delete"{% endblock %}
+
+{% block main %}
+  <form action="/editor/delete" method="POST">
+      <h2>Delete {{ title }}?</h2>
+      <p class="buttons">
+        <input type="hidden" name="id" value="{{ id }}">
+        <input type="submit" name="action" value="Yes">
+        <input type="submit" name="action" value="No">
+      </p>
+  </form>
+{% endblock %}

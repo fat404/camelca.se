@@ -1,20 +1,24 @@
-form {
+#editor form {
   width: 96%;
   margin: 0;
   padding: 1% 2%;
 }
 
+#editor h4 {
+  margin: 10px 0;
+}
+
 input,
 textarea {
-  width: 96%;
-  padding: 2%;
+  width: 98%;
+  padding: 1%;
   border: 1px solid #aaa;
   border-radius: 5px;
 }
 
-textarea {
+#editor textarea {
   height: 250px;
-  font-family: 'Consolas', 'Courier New', monospace;
+  font-family: 'Consolas', monospace;
 }
 
 input[type="checkbox"],
@@ -132,8 +136,6 @@ a:focus {
 }
 
 .preview img {
-    /*max-width: 640px;*/
-    min-width: 640px;
     max-width: 100%;
     margin: 5px 0 0 0;
     display: block;
@@ -188,14 +190,14 @@ a:focus {
 }
 
 @media only screen and (min-width: 640px) {   
-  form {
+  #editor form {
     width: 46%;
     margin: 0;
     padding: 1% 2%;
   }
 
-  textarea {
-    height: 400px;
+  #editor textarea {
+    height: 450px;
   }
 
   .preview {
@@ -209,13 +211,26 @@ a:focus {
     top: 0;
   }
 
-  .wrap {
+  .preview .wrap {
     max-width: 640px;
     margin: 2% auto 10% auto;
+  }
+
+  .preview img {
+    max-width: 640px;
   }
 }
 
 #login form {
   width: 240px;
   margin: 0 auto;
+}
+
+#delete {
+  width: 240px;
+  margin: 0 auto;
+}
+
+#delete h2 {
+  text-align: center;
 }

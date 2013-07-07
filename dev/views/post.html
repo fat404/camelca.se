@@ -1,19 +1,16 @@
 {% extends 'base.html' %}
 
-{% block page_title %}
-{{ page.title }} - 
-{% endblock %}
+{% block page_title %}{{ page.title }} - {{ parent() }}{% endblock %}
 
 {% block main %}
-
   <article class="post">
-    <header class="clearfix">
-        <h1>{{ page.title }}</h1>
-        <div class="post-meta">{{ page.publish_date | date('F d, Y') }}</div>
-    </header>
-    {{ page.content | raw }}
+      <header class="clearfix">
+          <h1>{{ page.title }}</h1>
+          <div class="post-meta">{{ page.publish_date | date('F d, Y') }}</div>
+      </header>
+      {{ page.html | raw }}
   </article>
-  {% if page.post_nav is defined %}
+  {% if post_nav %}
   <nav class="post-nav clearfix">
       <div class="prev">
       {% if post_nav.prev %}
@@ -33,5 +30,4 @@
       </div>
   </nav>
   {% endif %}
-
 {% endblock %}

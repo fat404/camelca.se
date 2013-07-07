@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>camelCase</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base_backend.html' %}
 
-        <link rel="stylesheet" href="/css/normalize.min.css">
-        <link rel="stylesheet" href="/css/editor.css">
+{% block page_title %}Login - {{ parent() }}{% endblock %}
+{% block slug %} id="login"{% endblock %}
 
-        <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body id="login">
-      <form action="/login" method="POST">
-          <h2>{% if message is defined %}{{ message }}{% else %}Login to continue.{% endif %}</h2>
-          <p><input type="text" name="username" placeholder="username" required autofocus></p>
-          <p><input type="password" name="password" placeholder="password" required></p>
-          <p><input type="submit" value="Login"></p>
-      </form>
-    </body>
-</html>
+{% block main %}
+  <form action="/login" method="POST">
+      <h2>{% if message is defined %}{{ message }}{% else %}Login to continue.{% endif %}</h2>
+      <p><input type="text" name="username" placeholder="username" required autofocus></p>
+      <p><input type="password" name="password" placeholder="password" required></p>
+      <p><input type="submit" value="Login"></p>
+  </form>
+{% endblock %}
