@@ -1,7 +1,7 @@
 dev/composer.lock
 dev/composer.phar
 dev/vendor/*
-#dev/src/Configuration.php
+dev/src/Configuration.php
 dev/web/google*.html
 
 s/google*.html
