@@ -10,7 +10,7 @@
     <h4>{% if message is defined %}{{ message | raw }}{% else %}&nbsp;{% endif %}</h4>
     <p><input type="text" name="title" placeholder="Title" value="{{ title }}" required></p>
     <p><input type="text" name="slug" placeholder="Slug" value="{{ slug }}" disabled></p>
-    <textarea id="text-input" name="content" placeholder="Markdown" oninput="this.editor.update()" required autofocus>{{ content }}</textarea>
+    <textarea id="text-input" name="content" placeholder="Markdown" oninput="this.editor.update()" required autofocus>{{ content | raw }}</textarea>
     <p><input type="text" name="publish_date" placeholder="Publish Date" value="{{ publish_date | date('F d, Y h:ia') }}"></p>
     <p>
       <label><input type="radio" name="type" value="post" {% if type != 'page' %}checked="checked"{% endif %}> Post</label>
