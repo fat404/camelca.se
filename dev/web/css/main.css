@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?934286');
-  src: url('../font/fontello.eot?934286#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff?934286') format('woff'),
-       url('../font/fontello.ttf?934286') format('truetype'),
-       url('../font/fontello.svg?934286#fontello') format('svg');
+  src: url('../font/fontello.svg?94483359#fontello') format('svg');
+  src: url('../font/fontello.eot?94483359'),
+       url('../font/fontello.eot?94483359#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff?94483359') format('woff'),
+       url('../font/fontello.ttf?94483359') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -40,18 +40,26 @@
    text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); 
 }
  
-.icon-mail:before { content: '\e804'; } /* '' */
+.icon-home:before { content: '\e806'; } /* '' */
+.icon-mail:before { content: '\e800'; } /* '' */
+.icon-ok:before { content: '\e807'; } /* '' */
+.icon-cancel:before { content: '\e808'; } /* '' */
+.icon-tag:before { content: '\e809'; } /* '' */
+.icon-tags:before { content: '\e80a'; } /* '' */
+.icon-location:before { content: '\e812'; } /* '' */
+.icon-github-circled-alt2:before { content: '\e813'; } /* '' */
+.icon-link-ext:before { content: '\e80d'; } /* '' */
 .icon-twitter:before { content: '\e802'; } /* '' */
-.icon-facebook:before { content: '\e801'; } /* '' */
-.icon-github-circled:before { content: '\e809'; } /* '' */
-.icon-gplus-squared:before { content: '\e807'; } /* '' */
-.icon-gplus:before { content: '\e803'; } /* '' */
-.icon-mail-alt:before { content: '\e800'; } /* '' */
-.icon-github:before { content: '\e80a'; } /* '' */
-.icon-github-squared:before { content: '\e808'; } /* '' */
-.icon-twitter-squared:before { content: '\e806'; } /* '' */
-.icon-facebook-squared:before { content: '\e805'; } /* '' */
-
+.icon-facebook:before { content: '\e803'; } /* '' */
+.icon-rss:before { content: '\e80f'; } /* '' */
+.icon-gplus:before { content: '\e801'; } /* '' */
+.icon-code:before { content: '\e811'; } /* '' */
+.icon-direction:before { content: '\e810'; } /* '' */
+.icon-info:before { content: '\e805'; } /* '' */
+.icon-thumbs-up:before { content: '\e80b'; } /* '' */
+.icon-thumbs-down:before { content: '\e80c'; } /* '' */
+.icon-attach:before { content: '\e80e'; } /* '' */
+.icon-link:before { content: '\e804'; } /* '' */
 
 /* ==========================================================================
    HTML5 Boilerplate styles - h5bp.com (generated via initializr.com)
