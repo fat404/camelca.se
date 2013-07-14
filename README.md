@@ -22,6 +22,20 @@
     Fonts: Droid Serif, Open Sans, Consolas
 
 ## CHANGELOG
+    v1.0 - 2013-07-14
+    * added proper 404 and other HTTP response code for error handling
+    * renamed 'upload' to 'uploads'
+    * cleaned up folders and files
+    * removed unused assets
+    * added delete function into editor
+    * refactored all the controller, database, configuration and helper methods
+    * fixed some encoding issue in the editor textarea
+    * added magic quote fix for content
+    * updated spacing issue
+    * updated htacceses
+    * added more font icons
+    * added colours for social media icons
+
     v0.9 - 2013-07-05
     * tons of updates
     * added editor and update/insert to interact with db
