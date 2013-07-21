@@ -414,7 +414,7 @@ body,
     }
 
 #copyright span {
-    font-family: monospace;
+    font-family: 'Consolas', monospace;
 }
 
 /* Main */
