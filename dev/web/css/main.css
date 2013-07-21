@@ -341,7 +341,7 @@ body,
 }
 
 #header h1 a {
-    font-family: 'Consolas', monospace;
+    font-family: 'Consolas', 'Courier New', monospace;
     font-size: 50px;
     font-weight: normal;
     color: #444;
@@ -414,7 +414,7 @@ body,
     }
 
 #copyright span {
-    font-family: 'Consolas', monospace;
+    font-family: 'Consolas', 'Courier New', monospace;
 }
 
 /* Main */
